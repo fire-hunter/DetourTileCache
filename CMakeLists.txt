@@ -20,17 +20,25 @@
 # THE SOFTWARE.
 #
 
-# Define target name
-set (TARGET_NAME DetourTileCache)
+cmake_minimum_required(VERSION 3.5)
+
+### Hunter snapshot that will be used ###
+include("cmake/HunterGate.cmake")
+HunterGate(
+    URL "https://github.com/ruslo/hunter/archive/v0.14.19.tar.gz"
+    SHA1 "ab886ddc6be6870a403224ee8f587e640827b1d9"
+)
+
+project(DetourTileCache VERSION 1.4.0)
+
+
+hunter_add_package(Detour)
+find_package(Detour CONFIG REQUIRED)
+include_directories("${DETOUR_ROOT}/include/Detour")
 
 # Define source files
-define_source_files (GLOB_CPP_PATTERNS source/*.cpp GLOB_H_PATTERNS include/*.h)
+file (GLOB PROJECT_SOURCE source/*.cpp)
+file(GLOB PROJECT_HEADER include/*.h)
+set (INCLUDE_DIRS include)
 
-# Define dependency libs
-set (INCLUDE_DIRS include ../Detour/include)
-
-# Setup target
-setup_library ()
-
-# Install headers for building the Urho3D library
-install_header_files (DIRECTORY include/ DESTINATION ${DEST_INCLUDE_DIR}/ThirdParty/DetourTileCache FILES_MATCHING PATTERN *.h BUILD_TREE_ONLY)  # Note: the trailing slash is significant
+include(GenericInstall.cmake)
